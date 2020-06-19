@@ -1,6 +1,6 @@
-# flutter_basics
+# expense_planner
 
-A Quiz Application.
+A new Flutter project.
 
 ## Getting Started
 
