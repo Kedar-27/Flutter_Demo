@@ -1,6 +1,6 @@
 # expense_planner
 
-A new Flutter project.
+An application for managing personal expense.
 
 ## Getting Started
 

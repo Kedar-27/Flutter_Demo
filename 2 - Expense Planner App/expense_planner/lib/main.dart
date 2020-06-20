@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
-import './transactions.dart';
+import './widgets/new_transaction.dart';
 import 'package:flutter/material.dart';
+import './widgets/transaction_list.dart';
+import './models/transactions.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -23,33 +24,64 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.yellow,
         // This makes the visual density adapt to the platform that you run
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
+
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          foregroundColor: Theme.of(context).primaryColor,
+        ),
+
+
       ),
       home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
 
-  final List<Transaction> transactions = [
+class _MyHomePageState extends State<MyHomePage> {
+//region Variables
+  final List<Transaction> _userTransactions = [
     Transaction(
-      id: 't0',
-      title: 'New Shoes',
-      amount: 123.123,
-      date: DateTime.now()
-    ),
+        id: 't0', title: 'New Shoes', amount: 123.123, date: DateTime.now()),
     Transaction(
-        id: 't1',
-        title: 'New Shoes',
-        amount: 123.123,
-        date: DateTime.now()
-    )
+        id: 't1', title: 'New Shoes', amount: 123.123, date: DateTime.now())
   ];
+  //endregion
+
+  //region Methods
+
+
+    void _addTransaction(String title, double amount){
+      final newTransaction = Transaction(
+          id: DateTime.now().toString(),
+          title: title,
+          amount: amount,
+          date: DateTime.now()
+      );
+
+      setState(() {
+        this._userTransactions.add(newTransaction);
+      });
+
+
+    }
+
+    void _startAddNewTransaction(BuildContext context) {
+      showModalBottomSheet(context: context, builder: (ctx) {
+        return NewTransaction(this._addTransaction);
+      });
+    }
+
+
+  //endregion
 
 
   @override
@@ -59,80 +91,41 @@ class MyHomePage extends StatelessWidget {
     //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
-    // than having to indivi:dually change instances of widgets.
+    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text('Expense Planner'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget> [
-          Container(
-
-            width: double.infinity,
-              child: Card(child: Text('Chart Widget'),)
-          ),
-          Card(
-              elevation: 5,
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      TextField(decoration: InputDecoration(labelText: 'Title'),),
-                      TextField(decoration: InputDecoration(labelText: 'Title'),),
-                      FlatButton(child: Text('Add Transaction'),
-                        onPressed: () => {},
-                        textColor: Colors.purple,)
-                    ],
-
-          ),)
-          ),
-          Column(
-            children: transactions.map((transaction) =>
-                Card(child: Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                        child: Text(transaction.amount.toString(),
-                          style: TextStyle(color: Colors.purple,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 28,
-                          ),
-
-                        ),
-                        padding: EdgeInsets.all(10) ,
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                          color: Colors.purple
-                        ),
-                    ),
-
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                      Text(transaction.title,
-                          style: TextStyle(color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                      )
-                      ),
-                  Text(DateFormat.yMMMMd().format(transaction.date),
-                          style: TextStyle(color: Colors.grey,
-                      )),
-                    ],),
-                  ],
-                ))
-            ).toList(),
-          ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => this._startAddNewTransaction(context),
+          )
         ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+                width: double.infinity,
+                child: Card(
+                  child: Text('Chart Widget'),
+                  color: Theme.of(context).primaryColor,
+                )),
+            TransactionList(this._userTransactions)
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add,
+          color: Colors.black,
+        ),
+        onPressed: () => this._startAddNewTransaction(context),
       ),
     );
   }
 }
-
