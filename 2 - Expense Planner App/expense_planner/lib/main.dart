@@ -1,7 +1,8 @@
+import './widgets/chart.dart';
 import './widgets/new_transaction.dart';
 import 'package:flutter/material.dart';
 import './widgets/transaction_list.dart';
-import './models/transactions.dart';
+import './models/transaction.dart';
 
 void main() {
   runApp(MyApp());
@@ -62,13 +63,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-//region Variables
+  //region Variables
   final List<Transaction> _userTransactions = [
     //Transaction(
        // id: 't0', title: 'New Shoes', amount: 123.123, date: DateTime.now()),
     //Transaction(
        // id: 't1', title: 'New Clothes', amount: 123.123, date: DateTime.now())
   ];
+
+  List<Transaction> get _recentTransactions{
+      return _userTransactions.where((element) => element.date.isAfter(DateTime.now().subtract(Duration(days: 7)))).toList();
+  }
+
   //endregion
 
   //region Methods
@@ -122,10 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Container(
                 width: double.infinity,
-                child: Card(
-                  child: Text('Chart Widget'),
-                  color: Theme.of(context).primaryColor,
-                )),
+                child: Chart(this._recentTransactions)
+            ),
             TransactionList(this._userTransactions)
           ],
         ),

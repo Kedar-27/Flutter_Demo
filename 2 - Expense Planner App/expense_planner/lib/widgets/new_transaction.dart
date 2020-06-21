@@ -23,7 +23,7 @@ class _NewTransactionState extends State<NewTransaction> {
     final enteredTitle = this.titleController.text;
     final enteredAmount = double.parse(this.amountController.text);
 
-    if( enteredTitle.isEmpty || enteredAmount >= 0){
+    if( enteredTitle.isEmpty || enteredAmount < 0){
       return;
     }
 
