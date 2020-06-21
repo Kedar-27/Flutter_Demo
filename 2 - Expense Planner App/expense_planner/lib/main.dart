@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import './widgets/transaction_list.dart';
 import './models/transactions.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -29,12 +28,28 @@ class MyApp extends StatelessWidget {
         // the app on. For desktop platforms, the controls will be smaller and
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: 'Quicksand',
+          textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontSize: 20,
+                  color: Colors.black
+              )
+          ),
+        appBarTheme: AppBarTheme(
+            textTheme: ThemeData.light().textTheme.copyWith(
+                    headline6: TextStyle(
+                        fontFamily: 'OpenSans',
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold
+                )
+            )
+        ),
 
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           foregroundColor: Theme.of(context).primaryColor,
         ),
-
-
       ),
       home: MyHomePage(),
     );
@@ -49,40 +64,36 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 //region Variables
   final List<Transaction> _userTransactions = [
-    Transaction(
-        id: 't0', title: 'New Shoes', amount: 123.123, date: DateTime.now()),
-    Transaction(
-        id: 't1', title: 'New Shoes', amount: 123.123, date: DateTime.now())
+    //Transaction(
+       // id: 't0', title: 'New Shoes', amount: 123.123, date: DateTime.now()),
+    //Transaction(
+       // id: 't1', title: 'New Clothes', amount: 123.123, date: DateTime.now())
   ];
   //endregion
 
   //region Methods
 
+  void _addTransaction(String title, double amount) {
+    final newTransaction = Transaction(
+        id: DateTime.now().toString(),
+        title: title,
+        amount: amount,
+        date: DateTime.now());
 
-    void _addTransaction(String title, double amount){
-      final newTransaction = Transaction(
-          id: DateTime.now().toString(),
-          title: title,
-          amount: amount,
-          date: DateTime.now()
-      );
+    setState(() {
+      this._userTransactions.add(newTransaction);
+    });
+  }
 
-      setState(() {
-        this._userTransactions.add(newTransaction);
-      });
-
-
-    }
-
-    void _startAddNewTransaction(BuildContext context) {
-      showModalBottomSheet(context: context, builder: (ctx) {
-        return NewTransaction(this._addTransaction);
-      });
-    }
-
+  void _startAddNewTransaction(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return NewTransaction(this._addTransaction);
+        });
+  }
 
   //endregion
-
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add,
+        child: Icon(
+          Icons.add,
           color: Colors.black,
         ),
         onPressed: () => this._startAddNewTransaction(context),
