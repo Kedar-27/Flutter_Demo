@@ -35,7 +35,10 @@ class MyApp extends StatelessWidget {
                   fontFamily: 'OpenSans',
                   fontSize: 20,
                   color: Colors.black
-              )
+              ),
+            button: TextStyle(
+                color: Colors.black
+            ),
           ),
         appBarTheme: AppBarTheme(
             textTheme: ThemeData.light().textTheme.copyWith(
@@ -79,17 +82,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //region Methods
 
-  void _addTransaction(String title, double amount) {
+  void _addTransaction(String title, double amount , DateTime selectedDate) {
     final newTransaction = Transaction(
-        id: DateTime.now().toString(),
+        id: selectedDate.toString(),
         title: title,
         amount: amount,
-        date: DateTime.now());
+        date: selectedDate);
 
     setState(() {
       this._userTransactions.add(newTransaction);
     });
   }
+
+  void _deleteTransaction(String id) {
+
+    this._userTransactions.removeWhere((transaction) => transaction.id == id);
+
+  }
+
 
   void _startAddNewTransaction(BuildContext context) {
     showModalBottomSheet(
@@ -103,6 +113,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      // Here we take the value from the MyHomePage object that was created by
+      // the App.build method, and use it to set our appbar title.
+      title: Text('Expense Planner'),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => this._startAddNewTransaction(context),
+        )
+      ],
+    );
+
+    final availableHeight = MediaQuery.of(context).size.height - appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom;
+
+
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -110,27 +137,19 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text('Expense Planner'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => this._startAddNewTransaction(context),
-          )
-        ],
-      ),
+      appBar: appBar ,
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(
-                width: double.infinity,
+                height: availableHeight * 0.4,
                 child: Chart(this._recentTransactions)
             ),
-            TransactionList(this._userTransactions)
+            Container(
+                height: availableHeight * 0.6,
+                child: TransactionList(this._userTransactions,_deleteTransaction))
           ],
         ),
       ),
