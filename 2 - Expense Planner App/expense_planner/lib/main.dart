@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import './widgets/chart.dart';
 import './widgets/new_transaction.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,9 @@ import './widgets/transaction_list.dart';
 import './models/transaction.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown ,  DeviceOrientation.portraitUp]);
+
   runApp(MyApp());
 }
 
@@ -78,6 +83,12 @@ class _MyHomePageState extends State<MyHomePage> {
       return _userTransactions.where((element) => element.date.isAfter(DateTime.now().subtract(Duration(days: 7)))).toList();
   }
 
+  bool _showChart = false;
+
+
+
+
+
   //endregion
 
   //region Methods
@@ -125,17 +136,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
 
+
     final availableHeight = MediaQuery.of(context).size.height - appBar.preferredSize.height -
         MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom;
 
+    final transactionListWidget = Container(
+        height: availableHeight * 0.7,
+        child: TransactionList(this._userTransactions,_deleteTransaction)
+    );
+
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
 
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: appBar ,
       body: SingleChildScrollView(
@@ -143,16 +155,42 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-                height: availableHeight * 0.4,
-                child: Chart(this._recentTransactions)
+            if (isLandscape)
+              Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Show Chart'),
+                Switch(value: this._showChart, onChanged: (value){
+                setState(() {
+                  this._showChart = value;
+                });
+               },
+              ),
+              ]
             ),
-            Container(
-                height: availableHeight * 0.6,
-                child: TransactionList(this._userTransactions,_deleteTransaction))
+
+           if(!isLandscape)
+             Container(
+               height: availableHeight * 0.3,
+               child: Chart(this._recentTransactions)
+           ),
+
+            if(!isLandscape)
+              transactionListWidget,
+
+
+           if (isLandscape)
+             _showChart ? Container(
+                height: availableHeight * 0.8,
+                child: Chart(this._recentTransactions)
+            )
+                : transactionListWidget
           ],
         ),
       ),
+
+
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(

@@ -14,57 +14,61 @@ class TransactionList extends StatelessWidget {
   TransactionList(this.transactions, this.deleteTransaction);
   //endregion
 
-
-
   @override
   Widget build(BuildContext context) {
-    return this.transactions.isEmpty ?
-    Column( children: [
-      Text('No transactions added yet!.',style: Theme.of(context).textTheme.headline6,),
-      SizedBox(height: 20,),
-      Container(
-          height: 270,
-          child: Image.asset('assets/images/waiting.png',fit: BoxFit.cover,))
-    ],) :
-    ListView.builder(
-      itemBuilder: (context, index){
-        final transaction = this.transactions[index];
+    return this.transactions.isEmpty
+        ? LayoutBuilder(
+            builder: (context, constraints) => Column(
+                  children: [
+                    Text(
+                      'No transactions added yet!.',
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                        height: constraints.maxHeight * 0.6,
+                        child: Image.asset(
+                          'assets/images/waiting.png',
+                          fit: BoxFit.cover,
+                        ))
+                  ],
+                ))
+        : ListView.builder(
+            itemBuilder: (context, index) {
+              final transaction = this.transactions[index];
 
-      return Card(
-        elevation: 6,
-       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
-        child: ListTile(
-          leading: FittedBox(
-            child: CircleAvatar(
-              radius: 30,
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Text('\$${transaction.amount.toStringAsFixed(2)}',
-                            style: Theme.of(context).textTheme.headline6
-                           ,),
-              )
-
-
-        ),
-          ),
-          title:   Text(transaction.title,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            )
-          ),
-          subtitle: Text(DateFormat.yMMMMd().format(transaction.date),
-                            style: TextStyle(
-                              color: Colors.grey,
-                            )
-          ),
-          trailing: IconButton(icon: Icon(Icons.delete),color: Theme.of(context).errorColor,
-              onPressed: () => deleteTransaction(transaction.id)
-          )
-        ),
-      );
-
+              return Card(
+                elevation: 6,
+                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                child: ListTile(
+                    leading: FittedBox(
+                      child: CircleAvatar(
+                          radius: 30,
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text(
+                              '\$${transaction.amount.toStringAsFixed(2)}',
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                          )),
+                    ),
+                    title: Text(transaction.title,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        )),
+                    subtitle: Text(DateFormat.yMMMMd().format(transaction.date),
+                        style: TextStyle(
+                          color: Colors.grey,
+                        )),
+                    trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        color: Theme.of(context).errorColor,
+                        onPressed: () => deleteTransaction(transaction.id))),
+              );
 
 //          Card(
 //                child: Row(
@@ -100,9 +104,8 @@ class TransactionList extends StatelessWidget {
 //                  ],
 //                )
 //        );
-
-      },
-      itemCount: this.transactions.length,
-    );
+            },
+            itemCount: this.transactions.length,
+          );
   }
 }

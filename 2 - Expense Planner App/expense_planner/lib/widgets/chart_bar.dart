@@ -5,7 +5,6 @@ class ChartBar extends StatelessWidget {
   final String label;
   final double spendingAmount;
   final double spendingPercentageOfTotal;
-
   //endregion
 
   ChartBar({this.label, this.spendingAmount, this.spendingPercentageOfTotal});
@@ -53,7 +52,8 @@ class ChartBar extends StatelessWidget {
           ),
           Container(
             height: constraints.maxHeight * 0.1,
-              child: FittedBox(child: Text(this.label)))
+              child: FittedBox(child: Text(this.label))
+          )
         ],
       );
     },);
