@@ -54,7 +54,7 @@ class Chart extends StatelessWidget {
               fit: FlexFit.tight,
               child: ChartBar(label: transaction['day'],
                   spendingAmount: transaction['amount'],
-                  spendingPercentageOfTotal: (transaction['amount'] as double) / maxSpending
+                  spendingPercentageOfTotal: maxSpending == 0.0 ? 0.0 : (transaction['amount'] as double) / maxSpending
               ),
             );
           }).toList(),

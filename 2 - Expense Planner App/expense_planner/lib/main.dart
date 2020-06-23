@@ -106,8 +106,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _deleteTransaction(String id) {
+    setState(() {
+      this._userTransactions.removeWhere((transaction) => transaction.id == id);
+    });
 
-    this._userTransactions.removeWhere((transaction) => transaction.id == id);
 
   }
 
