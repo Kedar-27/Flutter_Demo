@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
 import '../models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -64,10 +63,19 @@ class TransactionList extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.grey,
                         )),
-                    trailing: IconButton(
+                    trailing: MediaQuery.of(context).size.width > 460 ?
+                        FlatButton.icon(
+                            icon: Icon(Icons.delete),
+                            label: Text('Delete'),
+                            textColor:Theme.of(context).errorColor ,
+                            onPressed: () => deleteTransaction(transaction.id)
+                        )
+                        :IconButton(
                         icon: Icon(Icons.delete),
                         color: Theme.of(context).errorColor,
-                        onPressed: () => deleteTransaction(transaction.id))),
+                        onPressed: () => deleteTransaction(transaction.id)
+                    )
+                ),
               );
 
 //          Card(

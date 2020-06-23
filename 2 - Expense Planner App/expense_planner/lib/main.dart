@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import './widgets/chart.dart';
@@ -8,7 +9,8 @@ import './models/transaction.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown ,  DeviceOrientation.portraitUp]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
 
   runApp(MyApp());
 }
@@ -35,26 +37,18 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'Quicksand',
-          textTheme: ThemeData.light().textTheme.copyWith(
+        textTheme: ThemeData.light().textTheme.copyWith(
               headline6: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontSize: 20,
-                  color: Colors.black
-              ),
-            button: TextStyle(
-                color: Colors.black
+                  fontFamily: 'OpenSans', fontSize: 20, color: Colors.black),
+              button: TextStyle(color: Colors.black),
             ),
-          ),
         appBarTheme: AppBarTheme(
             textTheme: ThemeData.light().textTheme.copyWith(
-                    headline6: TextStyle(
-                        fontFamily: 'OpenSans',
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold
-                )
-            )
-        ),
+                headline6: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold))),
 
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           foregroundColor: Theme.of(context).primaryColor,
@@ -74,26 +68,25 @@ class _MyHomePageState extends State<MyHomePage> {
   //region Variables
   final List<Transaction> _userTransactions = [
     //Transaction(
-       // id: 't0', title: 'New Shoes', amount: 123.123, date: DateTime.now()),
+    // id: 't0', title: 'New Shoes', amount: 123.123, date: DateTime.now()),
     //Transaction(
-       // id: 't1', title: 'New Clothes', amount: 123.123, date: DateTime.now())
+    // id: 't1', title: 'New Clothes', amount: 123.123, date: DateTime.now())
   ];
 
-  List<Transaction> get _recentTransactions{
-      return _userTransactions.where((element) => element.date.isAfter(DateTime.now().subtract(Duration(days: 7)))).toList();
+  List<Transaction> get _recentTransactions {
+    return _userTransactions
+        .where((element) =>
+            element.date.isAfter(DateTime.now().subtract(Duration(days: 7))))
+        .toList();
   }
 
   bool _showChart = false;
-
-
-
-
 
   //endregion
 
   //region Methods
 
-  void _addTransaction(String title, double amount , DateTime selectedDate) {
+  void _addTransaction(String title, double amount, DateTime selectedDate) {
     final newTransaction = Transaction(
         id: selectedDate.toString(),
         title: title,
@@ -109,10 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       this._userTransactions.removeWhere((transaction) => transaction.id == id);
     });
-
-
   }
-
 
   void _startAddNewTransaction(BuildContext context) {
     showModalBottomSheet(
@@ -126,81 +116,100 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
-      // Here we take the value from the MyHomePage object that was created by
-      // the App.build method, and use it to set our appbar title.
-      title: Text('Expense Planner'),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () => this._startAddNewTransaction(context),
-        )
-      ],
-    );
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text('Expense Planner'),
+            trailing: GestureDetector(
+              onTap: () => this._startAddNewTransaction(context),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(CupertinoIcons.add),
+                ],
+              ),
+            ),
+          )
+        : AppBar(
+            // Here we take the value from the MyHomePage object that was created by
+            // the App.build method, and use it to set our appbar title.
+            title: Text('Expense Planner'),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => this._startAddNewTransaction(context),
+              )
+            ],
+          );
 
-
-    final availableHeight = MediaQuery.of(context).size.height - appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom;
+    final availableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
 
     final transactionListWidget = Container(
         height: availableHeight * 0.7,
-        child: TransactionList(this._userTransactions,_deleteTransaction)
+        child: TransactionList(this._userTransactions, _deleteTransaction)
     );
 
-    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
 
-
-    return Scaffold(
-      appBar: appBar ,
-      body: SingleChildScrollView(
+    //region Widgets
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             if (isLandscape)
-              Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Show Chart'),
-                Switch(value: this._showChart, onChanged: (value){
-                setState(() {
-                  this._showChart = value;
-                });
-               },
-              ),
-              ]
-            ),
-
-           if(!isLandscape)
-             Container(
-               height: availableHeight * 0.3,
-               child: Chart(this._recentTransactions)
-           ),
-
-            if(!isLandscape)
-              transactionListWidget,
-
-
-           if (isLandscape)
-             _showChart ? Container(
-                height: availableHeight * 0.8,
-                child: Chart(this._recentTransactions)
-            )
-                : transactionListWidget
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text('Show Chart', style: Theme.of(context).textTheme.headline6,),
+                Switch(
+                  value: this._showChart,
+                  onChanged: (value) {
+                    setState(() {
+                      this._showChart = value;
+                    });
+                  },
+                ),
+              ]),
+            if (!isLandscape)
+              Container(
+                  height: availableHeight * 0.3,
+                  child: Chart(this._recentTransactions)),
+            if (!isLandscape) transactionListWidget,
+            if (isLandscape)
+              _showChart
+                  ? Container(
+                      height: availableHeight * 0.8,
+                      child: Chart(this._recentTransactions))
+                  : transactionListWidget
           ],
         ),
       ),
-
-
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.black,
-        ),
-        onPressed: () => this._startAddNewTransaction(context),
-      ),
     );
+
+    //endregion
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                    onPressed: () => this._startAddNewTransaction(context),
+                  ),
+          );
   }
 }
