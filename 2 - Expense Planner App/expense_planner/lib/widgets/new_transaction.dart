@@ -56,11 +56,7 @@ class _NewTransactionState extends State<NewTransaction> {
           }
           this._selectedDate = selectedDate;
         });
-
     });
-
-
-
   }
 
    //endregion
@@ -97,7 +93,8 @@ class _NewTransactionState extends State<NewTransaction> {
                     children: [
                       Expanded(
                         child: Text(this._selectedDate == null ? 'No date chosen':
-                        'Selected Date: ${DateFormat.yMd().format(this._selectedDate)}'),
+                        'Selected Date: ${DateFormat.yMd().format(this._selectedDate)}'
+                        ),
                       ),
                       AdaptiveFlatButton(title:'Choose Date', completionHandler: this._presentDatePicker)
                     ],

@@ -9,8 +9,8 @@ import './models/transaction.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+//  SystemChrome.setPreferredOrientations(
+//      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
 
   runApp(MyApp());
 }
@@ -86,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //region Methods
 
+
   void _addTransaction(String title, double amount, DateTime selectedDate) {
     final newTransaction = Transaction(
         id: selectedDate.toString(),
@@ -112,6 +113,38 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+
+   List<Widget> _buildLandscapeContent(double availableHeight , Widget transactionListWidget ){
+    return [
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text('Show Chart', style: Theme.of(context).textTheme.headline6,),
+        Switch(
+          value: this._showChart,
+          onChanged: (value) {
+            setState(() {
+              this._showChart = value;
+            });
+          },
+        ),
+      ]),
+      _showChart
+          ? Container(
+            height: availableHeight * 0.8,
+            child: Chart(this._recentTransactions))
+          : transactionListWidget
+    ];
+  }
+
+
+  List<Widget> _buildPortraitContent(double availableHeight , Widget transactionListWidget ){
+    return [
+    Container(
+        height: availableHeight * 0.3,
+        child: Chart(this._recentTransactions)),
+       transactionListWidget
+    ];
+  }
+
   //endregion
 
   @override
@@ -132,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
         : AppBar(
             // Here we take the value from the MyHomePage object that was created by
             // the App.build method, and use it to set our appbar title.
-            title: Text('Expense Planner'),
+            title: const Text('Expense Planner'),
             actions: [
               IconButton(
                 icon: Icon(Icons.add),
@@ -162,28 +195,10 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             if (isLandscape)
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text('Show Chart', style: Theme.of(context).textTheme.headline6,),
-                Switch(
-                  value: this._showChart,
-                  onChanged: (value) {
-                    setState(() {
-                      this._showChart = value;
-                    });
-                  },
-                ),
-              ]),
+             ...this._buildLandscapeContent(availableHeight, transactionListWidget),
             if (!isLandscape)
-              Container(
-                  height: availableHeight * 0.3,
-                  child: Chart(this._recentTransactions)),
-            if (!isLandscape) transactionListWidget,
-            if (isLandscape)
-              _showChart
-                  ? Container(
-                      height: availableHeight * 0.8,
-                      child: Chart(this._recentTransactions))
-                  : transactionListWidget
+              ...this._buildPortraitContent(availableHeight, transactionListWidget),
+
           ],
         ),
       ),
