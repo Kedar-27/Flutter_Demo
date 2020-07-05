@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meals_app/category_meals_page.dart';
 import './categories_page.dart';
 
 void main() {
@@ -31,9 +32,25 @@ class MyApp extends StatelessWidget {
           ),
         )
       ),
-      home: CategoriesPage(),
+      //home: CategoriesPage(),
+      initialRoute: RouteNames.home,
+      routes: {
+        RouteNames.home : (context) => CategoriesPage(),
+
+        RouteNames.categoryMeals : (context) => CategoryMealsPage(),
+
+      },
+
+      
+      
     );
   }
 }
 
 
+class RouteNames {
+  static const String home = '/';
+  static const String categoryMeals = '/category-meals';
+  //static const String slideshow = '/slideshow';
+  //static const String settings = '/settings';
+}

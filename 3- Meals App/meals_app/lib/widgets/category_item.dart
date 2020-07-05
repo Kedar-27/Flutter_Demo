@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meals_app/main.dart';
 import '../category_meals_page.dart';
 
 class CategoryItem extends StatelessWidget {
@@ -15,10 +16,15 @@ class CategoryItem extends StatelessWidget {
 
   //region Methods
   void _selectCategory(BuildContext context){
-    Navigator.of(context).push( MaterialPageRoute(builder: (_){
-      return CategoryMealsPage(categoryColor: this.color,categoryId: this.id,categoryTitle: this.title,);
-    })
-    );
+//    Navigator.of(context).push( MaterialPageRoute(builder: (_){
+//      return CategoryMealsPage(categoryColor: this.color,categoryId: this.id,categoryTitle: this.title,);
+//    })
+//    );
+      Navigator.of(context).pushNamed(RouteNames.categoryMeals,arguments:
+      {
+        'id': this.id,
+        'title': this.title,
+      });
   }
 
   //endregion
