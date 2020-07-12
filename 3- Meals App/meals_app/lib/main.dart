@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meals_app/category_meals_page.dart';
-import './categories_page.dart';
+import './pages/meal_details_page.dart';
+import './pages/category_meals_page.dart';
+import './pages/categories_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Meals App',
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -39,6 +41,7 @@ class MyApp extends StatelessWidget {
 
         RouteNames.categoryMeals : (context) => CategoryMealsPage(),
 
+        RouteNames.mealDetails : (context) => MealDetailsPage(),
       },
 
       
@@ -51,6 +54,6 @@ class MyApp extends StatelessWidget {
 class RouteNames {
   static const String home = '/';
   static const String categoryMeals = '/category-meals';
-  //static const String slideshow = '/slideshow';
+  static const String mealDetails = '/meal-details';
   //static const String settings = '/settings';
 }

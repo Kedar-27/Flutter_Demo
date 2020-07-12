@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meals_app/main.dart';
-import '../category_meals_page.dart';
+
 
 class CategoryItem extends StatelessWidget {
   //region Properties
@@ -43,7 +43,7 @@ class CategoryItem extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [this.color.withOpacity(0.7)],
+            colors: [this.color.withOpacity(0.7), this.color],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight
            ),
