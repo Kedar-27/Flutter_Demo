@@ -19,12 +19,12 @@ class CategoryMealsPage extends StatelessWidget {
         .where((meal) => meal.categories.contains(categoryId))
         .toList();
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(categoryTitle),
-        ),
-        body: ListView.builder(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(categoryTitle),
+      ),
+      body: SafeArea(
+        child: ListView.builder(
           itemBuilder: (context, index) {
             final meal = categoryMeals[index];
 

@@ -6,12 +6,12 @@ class CategoriesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQueryObject = MediaQuery.of(context);
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Meals App'),
-        ),
-        body: GridView(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Meals App'),
+      ),
+      body: SafeArea(
+        child: GridView(
 
           padding: const EdgeInsets.all(15),
           children: DUMMY_CATEGORIES.map((catData) {
