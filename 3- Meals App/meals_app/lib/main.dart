@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import './pages/tabs_controller_page.dart';
 import './pages/meal_details_page.dart';
 import './pages/category_meals_page.dart';
 import './pages/categories_page.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
       //home: CategoriesPage(),
       initialRoute: RouteNames.home,
       routes: {
-        RouteNames.home : (context) => CategoriesPage(),
+        RouteNames.home : (context) => TabControllerPage(),
 
         RouteNames.categoryMeals : (context) => CategoryMealsPage(),
 
