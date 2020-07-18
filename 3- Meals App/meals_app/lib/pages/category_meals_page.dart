@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/models/meal.dart';
 import '../widgets/meal_item.dart';
 import '../dummy_data.dart';
 
-class CategoryMealsPage extends StatelessWidget {
+class CategoryMealsPage extends StatefulWidget {
 //  final String categoryId;
 //  final String categoryTitle;
 //  final Color categoryColor;
@@ -10,15 +11,54 @@ class CategoryMealsPage extends StatelessWidget {
 //  const CategoryMealsPage({Key key, this.categoryId, this.categoryTitle, this.categoryColor}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final routeArgs =
-        ModalRoute.of(context).settings.arguments as Map<String, String>;
-    final categoryTitle = routeArgs['title'];
-    final categoryId = routeArgs['id'];
-    final categoryMeals = DUMMY_MEALS
-        .where((meal) => meal.categories.contains(categoryId))
-        .toList();
+  _CategoryMealsPageState createState() => _CategoryMealsPageState();
+}
 
+class _CategoryMealsPageState extends State<CategoryMealsPage> {
+  //region Properties
+  String categoryTitle;
+  List<Meal> displayedMeals;
+  var _loadedInitially = false;
+  
+  //endregion
+  
+  
+  
+  
+  
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    
+    if (!this._loadedInitially) {
+      final routeArgs =
+      ModalRoute
+          .of(context)
+          .settings
+          .arguments as Map<String, String>;
+      this.categoryTitle = routeArgs['title'];
+      final categoryId = routeArgs['id'];
+      displayedMeals = DUMMY_MEALS
+          .where((meal) => meal.categories.contains(categoryId))
+          .toList();
+      this._loadedInitially = true;
+    }
+
+    super.didChangeDependencies();
+  }
+  
+  
+  
+  void _removeItem(String mealId){
+    setState(() {
+      displayedMeals.removeWhere((meal) => meal.id == mealId);
+    });
+  }
+  
+  
+  @override
+  Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(categoryTitle),
@@ -26,7 +66,7 @@ class CategoryMealsPage extends StatelessWidget {
       body: SafeArea(
         child: ListView.builder(
           itemBuilder: (context, index) {
-            final meal = categoryMeals[index];
+            final meal = displayedMeals[index];
 
             return Container(
               height: MediaQuery.of(context).size.width * 0.8,
@@ -38,10 +78,11 @@ class CategoryMealsPage extends StatelessWidget {
                 title: meal.title,
                 duration: meal.duration,
                 affordability: meal.affordability,
+                removeItem: this._removeItem,
               ),
             );
           },
-          itemCount: categoryMeals.length,
+          itemCount: displayedMeals.length,
         ),
       ),
     );

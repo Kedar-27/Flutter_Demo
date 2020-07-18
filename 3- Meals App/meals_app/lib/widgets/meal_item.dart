@@ -10,6 +10,7 @@ class MealItem extends StatelessWidget {
   final int duration;
   final Affordability affordability;
   final Complexity complexity;
+  final Function removeItem;
 
   const MealItem(
       {Key key,
@@ -18,7 +19,8 @@ class MealItem extends StatelessWidget {
       @required this.duration,
       @required this.complexity,
       @required this.affordability,
-      @required this.id})
+      @required this.id,
+      @required this.removeItem})
       : super(key: key);
 
   //endregion
@@ -54,9 +56,14 @@ class MealItem extends StatelessWidget {
 
   //region Methods
   void selectMeal(BuildContext context) {
-    Navigator.of(context).pushNamed(RouteNames.mealDetails , arguments: {
-    'id': this.id,
-    'title': this.title,
+    Navigator.of(context).pushNamed(RouteNames.mealDetails, arguments: {
+      'id': this.id,
+      'title': this.title,
+    }).then((result) {
+      if(result != null){
+        this.removeItem(result);
+      }
+
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import './pages/filter_page.dart';
 import './pages/tabs_controller_page.dart';
 import './pages/meal_details_page.dart';
 import './pages/category_meals_page.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primarySwatch: Colors.pink,
-        accentColor: Colors.amber, 
+        accentColor: Colors.indigoAccent,
           canvasColor:  Color.fromRGBO(255, 224, 229, 1),
         textTheme: ThemeData.light().textTheme.copyWith(
           bodyText1: TextStyle(
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         RouteNames.categoryMeals : (context) => CategoryMealsPage(),
 
         RouteNames.mealDetails : (context) => MealDetailsPage(),
+        RouteNames.filter : (context) => FilterPage(),
       },
       onGenerateRoute: (settings){
         print(settings.arguments);
@@ -67,5 +69,5 @@ class RouteNames {
   static const String home = '/';
   static const String categoryMeals = '/category-meals';
   static const String mealDetails = '/meal-details';
-  //static const String settings = '/settings';
+  static const String filter = '/filter';
 }
