@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/models/meal.dart';
 import '../dummy_data.dart';
 
 class MealDetailsPage extends StatelessWidget {
+
+  //region Properties
+  final Function isFavorite;
+  final Function toggleFavorite;
+
+  const MealDetailsPage(this.toggleFavorite, this.isFavorite);
+
+  //endregion
+
   //region Custom Widgets
 
   Widget buildSectionTitleWidget(BuildContext context, String title) {
@@ -95,8 +105,13 @@ class MealDetailsPage extends StatelessWidget {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.delete),
-          onPressed: () => Navigator.of(context).pop(mealId),),
+          child: this.isFavorite(mealId) ? Icon(Icons.star) : Icon(Icons.star_border),
+          onPressed: (){
+            this.toggleFavorite(mealId);
+          }
+
+              //() => Navigator.of(context).pop(mealId),
+        ),
     );
   }
 }

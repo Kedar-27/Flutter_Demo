@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:meals_app/models/meal.dart';
 import '../widgets/meal_item.dart';
 import '../dummy_data.dart';
+import '../models/meal.dart';
+
 
 class CategoryMealsPage extends StatefulWidget {
 //  final String categoryId;
@@ -9,6 +11,12 @@ class CategoryMealsPage extends StatefulWidget {
 //  final Color categoryColor;
 //
 //  const CategoryMealsPage({Key key, this.categoryId, this.categoryTitle, this.categoryColor}) : super(key: key);
+
+  final List<Meal> availableMeals;
+
+  const CategoryMealsPage({this.availableMeals});
+
+
 
   @override
   _CategoryMealsPageState createState() => _CategoryMealsPageState();
@@ -19,7 +27,8 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
   String categoryTitle;
   List<Meal> displayedMeals;
   var _loadedInitially = false;
-  
+
+
   //endregion
   
   
@@ -38,7 +47,7 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
           .arguments as Map<String, String>;
       this.categoryTitle = routeArgs['title'];
       final categoryId = routeArgs['id'];
-      displayedMeals = DUMMY_MEALS
+      displayedMeals = widget.availableMeals
           .where((meal) => meal.categories.contains(categoryId))
           .toList();
       this._loadedInitially = true;
