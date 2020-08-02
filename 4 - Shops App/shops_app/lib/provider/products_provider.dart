@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import '../model/product.dart';
 
-import '../models/product.dart';
-import '../widgets/product_item.dart';
+class ProductsProvider with ChangeNotifier {
+  //region Properties
+  //var _showFavoritesOnly = false;
 
-class ProductsOverviewScreen extends StatelessWidget {
-  final List<Product> loadedProducts = [
+  List<Product> _items = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -38,28 +39,41 @@ class ProductsOverviewScreen extends StatelessWidget {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
+  //endregion
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('MyShop'),
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(10.0),
-        itemCount: loadedProducts.length,
-        itemBuilder: (ctx, i) => ProductItem(
-              loadedProducts[i].id,
-              loadedProducts[i].title,
-              loadedProducts[i].imageUrl,
-            ),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 3 / 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-      ),
-    );
+  //region Methods
+
+  List<Product> get Products {
+//    if (this._showFavoritesOnly) {
+//      return [...this._items.where((product) => product.isFavorite)];
+//    } else {
+//
+//    }
+    return [...this._items];
   }
+
+  List<Product> get favProducts {
+    return [...this._items.where((product) => product.isFavorite)];
+  }
+
+
+  Product findProductById(String id) {
+    return this._items.firstWhere((product) => id == product.id);
+  }
+
+  void addProducts() {
+    notifyListeners();
+  }
+
+//  void showFavoritesOnly(){
+//    this._showFavoritesOnly = true;
+//    notifyListeners();
+//  }
+//  void showAll(){
+//    this._showFavoritesOnly = false;
+//    notifyListeners();
+//  }
+  
+  //endregion
+
 }
